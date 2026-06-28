@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import { MdDownload, MdEmail } from 'react-icons/md';
 
-// 導入実績の店舗データ。logo があればロゴ画像、無ければ店名テキストを表示する。
+// 導入実績の店舗データ。logo があればロゴ画像、無ければ仮ロゴのプレースホルダーを表示する。
 const stores: { name: string; logo?: string }[] = [
-  { name: '〇〇カードショップ' }, // 仮データ。確定後に実店舗名・ロゴへ差し替える。
+  { name: 'BOOKOFF 仙台クリスロード店様' }, // logo 未指定のため、確定したロゴ画像に差し替える。
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden" style={{ backgroundImage: 'url(/images/background.svg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat' }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundImage: 'url(/images/background.svg)', backgroundSize: 'cover', backgroundPosition: 'center top', backgroundRepeat: 'no-repeat', backgroundColor: '#1e2a78' }}>
       {/* ヘッダー / ナビゲーション */}
       <header className="fixed top-0 left-0 right-0 bg-transparent z-50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -23,7 +23,7 @@ export default function Home() {
       </header>
 
       {/* ヒーローセクション */}
-      <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <section className="flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-10 flex justify-center">
             <Image src="/images/logo.svg" alt="Logo" width={545} height={129} className="w-full max-w-2xl h-auto" priority />
@@ -45,45 +45,46 @@ export default function Home() {
       </section>
 
       {/* 導入実績セクション */}
-      <section className="px-4 sm:px-6 lg:px-8 py-20">
+      <section className="px-4 sm:px-6 lg:px-8 pt-4 pb-20">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">導入実績</h2>
-            <p className="text-lg text-gray-600">カードショップにご利用いただいています</p>
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">導入実績</h2>
           </div>
-          {/* 1 店舗のときは中央に大きめカード 1 枚、複数のときはグリッド表示に切り替わる。 */}
+          {/* 1 店舗のときは中央寄せ、複数のときはグリッド表示に切り替わる。 */}
           <div
             className={
               stores.length === 1
                 ? 'flex justify-center'
-                : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+                : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'
             }
           >
             {stores.map((store) => (
               <div
                 key={store.name}
-                className={`bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center text-center ${
-                  stores.length === 1 ? 'w-full max-w-md px-10 py-12' : 'px-6 py-8'
+                className={`flex flex-col items-center text-center ${
+                  stores.length === 1 ? 'w-full max-w-md' : ''
                 }`}
               >
-                <span className="text-sm font-semibold text-blue-600 mb-4">導入店舗</span>
+                {/* ロゴ枠。入る予定のロゴ画像の比率（約 3.4:1）に合わせる。 */}
                 {store.logo ? (
                   <Image
                     src={store.logo}
                     alt={store.name}
-                    width={240}
-                    height={120}
-                    className="h-auto w-auto max-h-24 object-contain"
+                    width={1200}
+                    height={355}
+                    className="w-full h-auto object-contain rounded-xl"
                   />
                 ) : (
-                  <span
-                    className={`font-bold text-gray-900 ${
-                      stores.length === 1 ? 'text-2xl sm:text-3xl' : 'text-lg'
-                    }`}
+                  // ロゴ画像が未確定のため、仮ロゴと分かるプレースホルダーを点線枠で表示する。
+                  <div
+                    className="flex items-center justify-center text-gray-300 border-2 border-dashed border-white/40 rounded-xl w-full"
+                    style={{ aspectRatio: '1200 / 355' }}
                   >
-                    {store.name}
-                  </span>
+                    <span className="text-sm font-semibold">ロゴ（仮）</span>
+                  </div>
                 )}
+                {/* 店名はロゴカードの下に表示する。 */}
+                <p className="mt-4 text-base sm:text-lg font-semibold text-white">{store.name}</p>
               </div>
             ))}
           </div>
