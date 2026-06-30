@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import { MdDownload, MdEmail } from 'react-icons/md';
 
-// 導入実績の店舗データ。logo があればロゴ画像、無ければ仮ロゴのプレースホルダーを表示する。
-// comment があればロゴ・店名の下に「お店の声」として表示する。
-const stores: { name: string; logo?: string; comment?: string }[] = [
+// 導入実績の店舗データ。
+// photo があれば店舗写真、photo が無く logo があればロゴ画像、どちらも無ければ仮プレースホルダーを表示する。
+// comment があれば画像・店名の下に「お店の声」として表示する。
+const stores: { name: string; logo?: string; photo?: string; comment?: string }[] = [
   {
     name: 'BOOKOFF 仙台クリスロード店様',
-    // logo 未指定のため、確定したロゴ画像に差し替える。
+    photo: '/images/bookoff-crisroad.png',
     // comment は仮テキスト。実際のインタビューコメントに差し替える。
     comment:
       '導入してからは、大会の組み合わせや順位の集計が自動でできるようになって、運営の負担がぐっと減りました。おかげでスタッフがお客様の対応に集中できています。',
@@ -72,8 +73,19 @@ export default function Home() {
                   stores.length === 1 ? 'w-full max-w-md' : ''
                 }`}
               >
-                {/* ロゴ枠。入る予定のロゴ画像の比率（約 3.4:1）に合わせる。 */}
-                {store.logo ? (
+                {store.photo ? (
+                  // 店舗写真。縦長写真でも間延びしないよう、16:9 の横長枠に object-cover で収める。
+                  <div className="relative w-full overflow-hidden rounded-xl shadow-lg" style={{ aspectRatio: '16 / 9' }}>
+                    <Image
+                      src={store.photo}
+                      alt={store.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 448px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : store.logo ? (
+                  // ロゴ枠。入る予定のロゴ画像の比率（約 3.4:1）に合わせる。
                   <Image
                     src={store.logo}
                     alt={store.name}
@@ -82,7 +94,7 @@ export default function Home() {
                     className="w-full h-auto object-contain rounded-xl"
                   />
                 ) : (
-                  // ロゴ画像が未確定のため、仮ロゴと分かるプレースホルダーを点線枠で表示する。
+                  // 画像が未確定のため、仮ロゴと分かるプレースホルダーを点線枠で表示する。
                   <div
                     className="flex items-center justify-center text-gray-300 border-2 border-dashed border-white/40 rounded-xl w-full"
                     style={{ aspectRatio: '1200 / 355' }}
