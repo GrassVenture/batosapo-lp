@@ -2,8 +2,15 @@ import Image from 'next/image';
 import { MdDownload, MdEmail } from 'react-icons/md';
 
 // 導入実績の店舗データ。logo があればロゴ画像、無ければ仮ロゴのプレースホルダーを表示する。
-const stores: { name: string; logo?: string }[] = [
-  { name: 'BOOKOFF 仙台クリスロード店様' }, // logo 未指定のため、確定したロゴ画像に差し替える。
+// comment があればロゴ・店名の下に「お店の声」として表示する。
+const stores: { name: string; logo?: string; comment?: string }[] = [
+  {
+    name: 'BOOKOFF 仙台クリスロード店様',
+    // logo 未指定のため、確定したロゴ画像に差し替える。
+    // comment は仮テキスト。実際のインタビューコメントに差し替える。
+    comment:
+      '導入してからは、大会の組み合わせや順位の集計が自動でできるようになって、運営の負担がぐっと減りました。おかげでスタッフがお客様の対応に集中できています。',
+  },
 ];
 
 export default function Home() {
@@ -48,7 +55,7 @@ export default function Home() {
       <section className="px-4 sm:px-6 lg:px-8 pt-4 pb-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">導入実績</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">ご利用者様の声</h2>
           </div>
           {/* 1 店舗のときは中央寄せ、複数のときはグリッド表示に切り替わる。 */}
           <div
@@ -85,6 +92,22 @@ export default function Home() {
                 )}
                 {/* 店名はロゴカードの下に表示する。 */}
                 <p className="mt-4 text-base sm:text-lg font-semibold text-white">{store.name}</p>
+                {/* コメントがあれば、店名の下に引用ブロックとして表示する。
+                    左罫線を残しつつ、引用符は罫線の内側に置いてぶつからないようにする。 */}
+                {store.comment && (
+                  <blockquote className="relative mt-4 max-w-md border-l-2 border-white/30 pl-6 pr-6 text-left">
+                    {/* 装飾用の開き引用符。罫線の右側 (本文カラム内) の左上に薄く重ねる。読み上げから外す。 */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-4 top-0 select-none font-serif text-4xl leading-none text-white/25"
+                    >
+                      &ldquo;
+                    </span>
+                    <p className="pt-3 text-sm sm:text-base italic text-white/85 leading-relaxed">
+                      {store.comment}
+                    </p>
+                  </blockquote>
+                )}
               </div>
             ))}
           </div>
