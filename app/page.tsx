@@ -7,7 +7,7 @@ import { MdDownload, MdEmail } from 'react-icons/md';
 const stores: { name: string; logo?: string; photo?: string; comment?: string }[] = [
   {
     name: 'BOOKOFF 仙台クリスロード店様',
-    photo: '/images/bookoff-crisroad.png',
+    logo: '/images/bookoff-logo.png',
     // comment は仮テキスト。実際のインタビューコメントに差し替える。
     comment:
       '導入してからは、大会の組み合わせや順位の集計が自動でできるようになって、運営の負担がぐっと減りました。おかげでスタッフがお客様の対応に集中できています。',
@@ -85,14 +85,17 @@ export default function Home() {
                     />
                   </div>
                 ) : store.logo ? (
-                  // ロゴ枠。入る予定のロゴ画像の比率（約 3.4:1）に合わせる。
-                  <Image
-                    src={store.logo}
-                    alt={store.name}
-                    width={1200}
-                    height={355}
-                    className="w-full h-auto object-contain rounded-xl"
-                  />
+                  // ロゴ枠。下地をロゴの地色 (#eef3fa) に合わせて四角い境目が出ないようにする。
+                  // ロゴは横長なので上下余白は控えめにし、枠が縦長にならないようにする。
+                  <div className="w-full rounded-xl shadow-lg px-8 py-5" style={{ backgroundColor: '#eef3fa' }}>
+                    <Image
+                      src={store.logo}
+                      alt={store.name}
+                      width={1200}
+                      height={356}
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
                 ) : (
                   // 画像が未確定のため、仮ロゴと分かるプレースホルダーを点線枠で表示する。
                   <div
