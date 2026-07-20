@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { MdDownload, MdEmail } from 'react-icons/md';
+import { MdDownload, MdEmail, MdMenuBook } from 'react-icons/md';
 
 export default function Home() {
   return (
@@ -26,7 +26,7 @@ export default function Home() {
           <p className="text-xl text-white mb-10 max-w-2xl mx-auto">
             スイスドロー形式の大会運営をもっと手軽に
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-center">
             <a href="/documents/brochure.pdf" download="バトサポ-ご紹介資料.pdf" className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition shadow-lg inline-flex items-center gap-2">
               <MdDownload className="text-2xl" />
               資料ダウンロード
@@ -34,6 +34,10 @@ export default function Home() {
             <a href="mailto:batosapo.info@gmail.com" className="bg-white text-gray-900 px-8 py-4 rounded-full text-lg font-semibold border-2 border-gray-300 hover:border-gray-400 transition inline-flex items-center gap-2">
               <MdEmail className="text-2xl" />
               お問い合わせ
+            </a>
+            <a href="/documents/admin-manual.pdf" download="バトサポ-基本操作マニュアル.pdf" className="bg-white text-gray-900 px-8 py-4 rounded-full text-lg font-semibold border-2 border-gray-300 hover:border-gray-400 transition inline-flex items-center gap-2">
+              <MdMenuBook className="text-2xl" />
+              操作マニュアル
             </a>
           </div>
         </div>
