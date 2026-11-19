@@ -1,9 +1,35 @@
 import Image from 'next/image';
 import { MdDownload, MdEmail, MdMenuBook } from 'react-icons/md';
 
+// 導入実績の店舗データ。
+// photos があれば店舗写真、photos が無く logo があればロゴ画像、どちらも無ければ仮プレースホルダーを表示する。
+// 店舗写真は複数枚を並べて表示できる（外観と大会スペースなど）。
+// comment があれば画像・店名の下に「お店の声」として表示する。
+const stores: { name: string; logo?: string; photos?: { src: string; alt: string }[]; comment?: string }[] = [
+  {
+    name: 'TSUTAYA 下瀬谷店様',
+    // 写真は下瀬谷店の亀谷さんに撮っていただいたもの。コメントは 11/18 の打ち合わせで掲載の了承をいただいた。
+    photos: [
+      { src: '/images/tsutaya-shimoseya-exterior.jpg', alt: 'TSUTAYA 下瀬谷店様の外観' },
+      { src: '/images/tsutaya-shimoseya-space.jpg', alt: 'TSUTAYA 下瀬谷店様の大会スペース' },
+    ],
+    comment:
+      'これまでは紙で大会を運営していましたが、バトサポを使うようになってからは組み合わせと順位が自動で出るので、大会の進行がスムーズになりました。ポケカやデュエマの大会で、毎回活用しています。',
+  },
+  // BOOKOFF は掲載の許可を取ってから戻す。
+  // 許可前に画像が公開されないよう、画像ファイル（bookoff-logo.png ・ bookoff-crisroad.png）も外してある。戻すときは git の履歴から復元する。
+  // {
+  //   name: 'BOOKOFF 仙台クリスロード店様',
+  //   // logo: '/images/bookoff-logo.png', // 実ロゴ確定までは「店舗画像（仮）」プレースホルダーを表示する。
+  //   // comment は仮テキスト。実際のインタビューコメントに差し替える。
+  //   comment:
+  //     '管理画面が直感的で分かりやすく、初めてでもすぐに使いこなせました。組み合わせや順位の集計が自動になったことで運営の負担が大きく減り、少ないスタッフでも大会をしっかり回せています。',
+  // },
+];
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden" style={{ backgroundImage: 'url(/images/background.svg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat' }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundImage: 'url(/images/background.svg)', backgroundSize: 'cover', backgroundPosition: 'center top', backgroundRepeat: 'no-repeat', backgroundColor: '#1e2a78' }}>
       {/* ヘッダー / ナビゲーション */}
       <header className="fixed top-0 left-0 right-0 bg-transparent z-50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -18,7 +44,7 @@ export default function Home() {
       </header>
 
       {/* ヒーローセクション */}
-      <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <section className="flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-10 flex justify-center">
             <Image src="/images/logo.svg" alt="Logo" width={545} height={129} className="w-full max-w-2xl h-auto" priority />
@@ -39,6 +65,93 @@ export default function Home() {
               <MdMenuBook className="text-2xl" />
               操作マニュアル
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 導入実績セクション */}
+      <section className="px-4 sm:px-6 lg:px-8 pt-4 pb-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">ご利用者様の声</h2>
+          </div>
+          {/* 1 店舗のときは中央寄せ、複数のときはグリッド表示に切り替わる。 */}
+          <div
+            className={
+              stores.length === 1
+                ? 'flex justify-center'
+                : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'
+            }
+          >
+            {stores.map((store) => (
+              <div
+                key={store.name}
+                className={`flex flex-col items-center text-center ${
+                  stores.length === 1 ? 'w-full max-w-2xl' : ''
+                }`}
+              >
+                {store.photos && store.photos.length > 0 ? (
+                  // 店舗写真。複数枚なら PC では横に並べ、スマホでは縦に積む。
+                  // 縦長の写真も混ざるので、4:3 の枠に object-cover で収めて高さを揃える。
+                  <div className={`grid w-full gap-3 ${store.photos.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+                    {store.photos.map((photo) => (
+                      <div
+                        key={photo.src}
+                        className="relative w-full overflow-hidden rounded-xl shadow-lg"
+                        style={{ aspectRatio: '4 / 3' }}
+                      >
+                        <Image
+                          src={photo.src}
+                          alt={photo.alt}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 336px"
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : store.logo ? (
+                  // ロゴ枠。下地をロゴの地色 (#eef3fa) に合わせて四角い境目が出ないようにする。
+                  // ロゴは横長なので上下余白は控えめにし、枠が縦長にならないようにする。
+                  <div className="w-full rounded-xl shadow-lg px-8 py-5" style={{ backgroundColor: '#eef3fa' }}>
+                    <Image
+                      src={store.logo}
+                      alt={store.name}
+                      width={1200}
+                      height={356}
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                ) : (
+                  // 画像が未確定のため、店舗画像の仮プレースホルダーを点線枠で表示する。
+                  // 店舗写真と同じ 16:9 の横長枠にして、実画像と差し替えても崩れないようにする。
+                  <div
+                    className="flex items-center justify-center text-gray-300 border-2 border-dashed border-white/40 rounded-xl w-full"
+                    style={{ aspectRatio: '16 / 9' }}
+                  >
+                    <span className="text-sm font-semibold">店舗画像（仮）</span>
+                  </div>
+                )}
+                {/* 店名はロゴカードの下に表示する。 */}
+                <p className="mt-4 text-base sm:text-lg font-semibold text-white">{store.name}</p>
+                {/* コメントがあれば、店名の下に引用ブロックとして表示する。
+                    左罫線を残しつつ、引用符は罫線の内側に置いてぶつからないようにする。 */}
+                {store.comment && (
+                  <blockquote className="relative mt-4 max-w-md border-l-2 border-white/30 pl-6 pr-6 text-left">
+                    {/* 装飾用の開き引用符。罫線の右側 (本文カラム内) の左上に薄く重ねる。読み上げから外す。 */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-4 top-0 select-none font-serif text-4xl leading-none text-white/25"
+                    >
+                      &ldquo;
+                    </span>
+                    <p className="pt-3 text-sm sm:text-base italic text-white/85 leading-relaxed">
+                      {store.comment}
+                    </p>
+                  </blockquote>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
