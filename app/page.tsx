@@ -8,7 +8,7 @@ import { MdDownload, MdEmail, MdMenuBook } from 'react-icons/md';
 const stores: { name: string; logo?: string; photos?: { src: string; alt: string }[]; comment?: string }[] = [
   {
     name: 'TSUTAYA 下瀬谷店様',
-    // 写真は下瀬谷店の亀谷さんに撮っていただいたもの。コメントは 11/18 の打ち合わせで掲載の了承をいただいた。
+    // 写真は店舗のご担当者に撮っていただいたもの。コメントは掲載の了承をいただいている。
     photos: [
       { src: '/images/tsutaya-shimoseya-exterior.jpg', alt: 'TSUTAYA 下瀬谷店様の外観' },
       { src: '/images/tsutaya-shimoseya-space.jpg', alt: 'TSUTAYA 下瀬谷店様の大会スペース' },
